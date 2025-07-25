@@ -8,3 +8,5 @@ pydantic>=2.0.0
 kaggle>=1.5.16
 accelerate>=0.24.0
 bitsandbytes>=0.41.0 
+fastapi>=0.110.0
+uvicorn>=0.29.0 

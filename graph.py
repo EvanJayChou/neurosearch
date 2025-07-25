@@ -25,7 +25,7 @@ from configuration import Configuration
 from prompts import (
     get_current_date,
     query_writer_instructions,
-    web_searcher_instructions,
+    dataset_searcher_instructions,  # updated name
     reflection_instructions,
     answer_instructions,
 )
@@ -177,14 +177,8 @@ def parse_queries_from_response(response: str, available_engines: List[str]) -> 
     
     for line in lines:
         if line.strip() and not line.startswith('#'):
-            # Simple heuristic to assign search engines
-            if any(keyword in line.lower() for keyword in ['dataset', 'data', 'eeg', 'meg', 'mri']):
-                target_sources = ['kaggle', 'nih', 'openneuro']
-            elif any(keyword in line.lower() for keyword in ['research', 'study', 'paper']):
-                target_sources = ['bing', 'nih']
-            else:
-                target_sources = ['bing']
-            
+            # Assign all queries to neuroscience dataset APIs
+            target_sources = ['kaggle', 'nih', 'openneuro']
             queries.append({
                 "query": line.strip(),
                 "rationale": f"Generated query for {', '.join(target_sources)}",
@@ -240,7 +234,7 @@ def web_research(state: WebSearchState, config: RunnableConfig) -> OverallState:
     # Generate summary using Hugging Face LLM
     llm = create_huggingface_llm(configurable.query_generator_model, configurable)
     
-    formatted_prompt = web_searcher_instructions.format(
+    formatted_prompt = dataset_searcher_instructions.format(
         current_date=get_current_date(),
         research_topic=state["search_query"],
         search_results=json.dumps(processed_results, indent=2)
@@ -402,7 +396,7 @@ def evaluate_research(
                 {
                     "search_query": follow_up_query,
                     "id": state["number_of_ran_queries"] + int(idx),
-                    "target_sources": ["bing", "kaggle", "nih", "openneuro"],  # Default to all sources for follow-up
+                    "target_sources": ["kaggle", "nih", "openneuro"],
                 },
             )
             for idx, follow_up_query in enumerate(state["follow_up_queries"])

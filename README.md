@@ -1,6 +1,6 @@
 # NeuroSearch
 
-NeuroSearch is an application that leverages AI agent-based web searching and querying to retrieve neuroscience datasets ranging from EEG, MEG, MRI, fMRI, PET, etc. and their respective metadata.
+NeuroSearch is an application that leverages AI agent-based querying to retrieve neuroscience datasets ranging from EEG, MEG, MRI, fMRI, PET, etc. and their respective metadata from trusted neuroscience dataset APIs (Kaggle, NIH, OpenNeuro).
 
 ---
 

@@ -15,39 +15,6 @@ class SearchResult:
     source: str
     metadata: Dict[str, Any]
 
-class BingSearchTool:
-    def __init__(self, api_key: str):
-        self.api_key = api_key
-        self.endpoint = "https://api.bing.microsoft.com/v7.0/search"
-    
-    def search(self, query: str, count: int = 10) -> List[SearchResult]:
-        headers = {"Ocp-Apim-Subscription-Key": self.api_key}
-        params = {
-            "q": query,
-            "count": count,
-            "mkt": "en-US",
-            "responseFilter": "Webpages"
-        }
-        
-        try:
-            response = requests.get(self.endpoint, headers=headers, params=params)
-            response.raise_for_status()
-            data = response.json()
-            
-            results = []
-            for item in data.get("webPages", {}).get("value", []):
-                results.append(SearchResult(
-                    title=item.get("name", ""),
-                    url=item.get("url", ""),
-                    snippet=item.get("snippet", ""),
-                    source="bing",
-                    metadata={"rank": item.get("position", 0)}
-                ))
-            return results
-        except Exception as e:
-            print(f"Bing search error: {e}")
-            return []
-
 class KaggleSearchTool:
     def __init__(self, username: str, key: str):
         self.username = username
@@ -157,9 +124,6 @@ class OpenNeuroSearchTool:
 class MultiSearchEngine:
     def __init__(self, config):
         self.tools = {}
-        
-        if "bing" in config.search_engines and config.bing_api_key:
-            self.tools["bing"] = BingSearchTool(config.bing_api_key)
         
         if "kaggle" in config.search_engines and config.kaggle_username and config.kaggle_key:
             self.tools["kaggle"] = KaggleSearchTool(config.kaggle_username, config.kaggle_key)

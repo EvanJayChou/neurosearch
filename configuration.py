@@ -28,20 +28,13 @@ class Configuration(BaseModel):
 
     # Search Configuration
     search_engines: List[str] = Field(
-        default=["bing", "google", "kaggle", "nih", "openneuro"],
+        default=["kaggle", "nih", "openneuro"],
         metadata={
             "description": "List of search engines to use."
         }
     )
 
     # API Keys
-    bing_api_key: Optional[str] = Field(
-        default=None,
-        metadata={
-            "description": "Bing Search API key."
-        }
-    )
-
     kaggle_username: Optional[str] = Field(
         default=None,
         metadata={
@@ -102,6 +95,7 @@ class Configuration(BaseModel):
         }
     )
 
+    @classmethod
     def from_runnable_config(
             cls, config: Optional[RunnableConfig] = None
     ) -> "Configuration":
